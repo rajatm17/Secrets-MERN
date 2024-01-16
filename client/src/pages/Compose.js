@@ -45,13 +45,17 @@ export default function Compose() {
       // Show toast messages based on the response status
       if (response.status === 200) {
         toast.error(response.data.message);
+        navigate('/');
       }
       if (response.status === 201) {
         toast.success(response.data.message);
+        navigate('/');
+      }
+      if (response.status === 202) {
+        toast.error('Invalid Data');
       }
 
       // Navigate back to the home page
-      navigate('/');
     } catch (error) {
       console.error('Error during secret submission:', error);
       // Handle error, show toast, or redirect to an error page if needed

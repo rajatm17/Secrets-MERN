@@ -52,6 +52,9 @@ export default function Login() {
           // Display a success toast
           toast.success('Logged in Successfully');
         }
+        if (response.status === 202) {
+          toast.error('Username or Password is Required');
+        }
       });
   };
 

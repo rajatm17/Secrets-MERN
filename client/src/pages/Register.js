@@ -41,6 +41,9 @@ export default function Register() {
           // Display an error toast if registration fails
           toast.error(response.data.message);
         }
+        if (response.status === 202) {
+          toast.error('Username or Password is Required');
+        }
       });
   };
 

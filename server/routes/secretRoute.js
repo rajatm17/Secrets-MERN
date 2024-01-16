@@ -46,30 +46,33 @@ secretsRouter.post('/compose', authenticateUser, async (req, res, next) => {
   const title = req.body.title;
   const description = req.body.description;
 
-  // Check if the user has already submitted a secret
-  const existingSecret = await secretModel.findOne({ userId: userId });
-
-  // If user has already submitted a secret, send a response
-  if (existingSecret) {
-    res
-      .status(200)
-      .json({ message: 'User already submitted a secret', userId });
+  if (!title || !description) {
+    res.status(202).send('No title or description');
   } else {
-    // If title or description is missing, send a response
-    if (!title || !description) {
-      res.send('No title or description');
+    // Check if the user has already submitted a secret
+    const existingSecret = await secretModel.findOne({ userId: userId });
+
+    // If user has already submitted a secret, send a response
+    if (existingSecret) {
+      res
+        .status(200)
+        .json({ message: 'User already submitted a secret', userId });
+    } else {
+      // If title or description is missing, send a response
+
+      // Create a new secret and save it to the database
+      const secret = new secretModel({
+        userId: userId,
+        title: title,
+        description: description,
+      });
+      await secret.save();
+
+      // Send a success response
+      res
+        .status(201)
+        .json({ message: 'Secret submitted successfully', userId });
     }
-
-    // Create a new secret and save it to the database
-    const secret = new secretModel({
-      userId: userId,
-      title: title,
-      description: description,
-    });
-    await secret.save();
-
-    // Send a success response
-    res.status(201).json({ message: 'Secret submitted successfully', userId });
   }
 });
 
